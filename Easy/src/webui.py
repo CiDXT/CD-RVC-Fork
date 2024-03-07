@@ -9,11 +9,16 @@ import gradio as gr
 
 from main import song_cover_pipeline
 
+
+os.system("python /content/training/Easy/src/download_models.py")
+os.system("pip install -r /content/training/Easy/requirements.txt")
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-mdxnet_models_dir = os.path.join(BASE_DIR, 'mdxnet_models')
-rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
-output_dir = os.path.join(BASE_DIR, 'song_output')
+mdxnet_models_dir = os.path.join(BASE_DIR, '/Easy/mdxnet_models')
+rvc_models_dir = os.path.join(BASE_DIR, '/Easy/rvc_models')
+output_dir = os.path.join(BASE_DIR, 'Easy/song_output')
 
 
 def get_current_models(models_dir):
@@ -166,15 +171,9 @@ if __name__ == '__main__':
     with open(os.path.join(rvc_models_dir, 'public_models.json'), encoding='utf8') as infile:
         public_models = json.load(infile)
 
-    with gr.Blocks(title='AICoverGenWebUI') as app:
-
-        gr.Label('AICoverGen WebUI created with ❤️', show_label=False)
-
+    
         # main tab
-        with gr.Tab("Generate"):
-
-            with gr.Accordion('Main Options'):
-                with gr.Row():
+             def cover():
                     with gr.Column():
                         rvc_model = gr.Dropdown(voice_models, label='Voice Models', info='Models folder "AICoverGen --> rvc_models". After new models are added into this folder, click the refresh button')
                         ref_btn = gr.Button('Refresh Models 🔁', variant='primary')
@@ -195,7 +194,7 @@ if __name__ == '__main__':
                     show_file_upload_button.click(swap_visibility, outputs=[file_upload_col, yt_link_col, song_input, local_file])
                     show_yt_link_button.click(swap_visibility, outputs=[yt_link_col, file_upload_col, song_input, local_file])
 
-            with gr.Accordion('Voice conversion options', open=False):
+             with gr.Accordion('Voice conversion options', open=False):
                 with gr.Row():
                     index_rate = gr.Slider(0, 1, value=0.5, label='Index Rate', info="Controls how much of the AI voice's accent to keep in the vocals")
                     filter_radius = gr.Slider(0, 7, value=3, step=1, label='Filter radius', info='If >=3: apply median filtering median filtering to the harvested pitch results. Can reduce breathiness')
@@ -314,9 +313,4 @@ if __name__ == '__main__':
                 local_upload_output_message = gr.Text(label='Output Message', interactive=False, scale=20)
                 model_upload_button.click(upload_local_model, inputs=[zip_file, local_model_name], outputs=local_upload_output_message)
 
-    app.launch(
-        share=args.share_enabled,
-        enable_queue=True,
-        server_name=None if not args.listen else (args.listen_host or '0.0.0.0'),
-        server_port=args.listen_port,
-    )
+    
