@@ -43,6 +43,7 @@ from my_utils import load_audio, CSVutil
 from train.process_ckpt import change_info, extract_small_model, merge, show_info
 from vc_infer_pipeline import VC
 from sklearn.cluster import MiniBatchKMeans
+from Easy.src.webui import cover
 
 tmp = os.path.join(now_dir, "TEMP")
 shutil.rmtree(tmp, ignore_errors=True)
@@ -1986,7 +1987,7 @@ def whethercrepeornah(radio):
 
 
 # Change your Gradio Theme here. 👇 👇 👇 👇 Example: " theme='HaleyCH/HaleyCH_Theme' "
-with gr.Blocks(theme=gr.themes.Soft(), title="Mangio-RVC-Web 💻") as app:
+with gr.Blocks(theme="Hev832/EasyAndCool"(), title="Mangio-RVC-Web 💻") as app:
     gr.HTML("<h1> The Mangio-RVC-Fork 💻 </h1>")
     gr.Markdown(
         value=i18n(
@@ -2951,7 +2952,8 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Mangio-RVC-Web 💻") as app:
                 gr.Markdown(value=info)
             except:
                 gr.Markdown(traceback.format_exc())
-
+        with gr.Tab("Extra"):
+        cover()
     # region Mangio Preset Handler Region
     def save_preset(
         preset_name,
